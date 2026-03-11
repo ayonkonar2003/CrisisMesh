@@ -1,0 +1,5 @@
+{
+  "name": "CrisisMesh",
+  "description": "A community-driven emergency response platform for reporting needs and matching them with local resource offers.",
+  "requestFramePermissions": ["geolocation"]
+}

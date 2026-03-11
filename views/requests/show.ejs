@@ -1,0 +1,107 @@
+<% layout('layouts/boilerplate') %>
+
+<a href="/requests" class="btn btn-link p-0 text-decoration-none text-muted mb-4 d-flex align-items-center small">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="m15 18-6-6 6-6"/></svg>
+    Back to Requests
+</a>
+
+<div class="row g-5">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4">
+            <div class="card-body">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                    <span class="badge bg-<%= request.urgency === 'Critical' ? 'danger' : 'warning' %> text-<%= request.urgency === 'Critical' ? 'white' : 'dark' %>">
+                        <%= request.urgency %>
+                    </span>
+                    <span class="badge bg-light text-dark border"><%= request.category %></span>
+                    <% if(request.status === 'resolved') { %>
+                        <span class="badge bg-success text-white">RESOLVED</span>
+                    <% } %>
+                </div>
+                
+                <h1 class="fw-bold mb-3"><%= request.title %></h1>
+                
+                <div class="d-flex flex-wrap gap-4 text-muted small mb-5">
+                    <div class="d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <%= request.location %>
+                        <a href="https://www.google.com/maps/search/?api=1&query=<%= encodeURIComponent(request.location) %>" target="_blank" class="ms-2 text-primary text-decoration-none d-flex align-items-center">
+                            <span class="me-1">Map</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-2 text-primary"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <%= new Date(request.createdAt).toLocaleDateString() %>
+                    </div>
+                </div>
+
+                <% if(request.image) { %>
+                    <img src="<%= request.image %>" referrerPolicy="no-referrer" class="img-fluid rounded-4 mb-5 shadow-sm" alt="<%= request.title %>" style="max-height: 400px; width: 100%; object-fit: cover;">
+                <% } %>
+
+                <div class="mb-5">
+                    <h5 class="fw-bold mb-3">Description</h5>
+                    <p class="text-muted leading-relaxed" style="font-size: 1.1rem;">
+                        <%= request.description %>
+                    </p>
+                </div>
+
+                <div class="pt-4 border-top d-flex flex-wrap gap-3">
+                    <form action="/requests/<%=request.id%>/verify?_method=PUT" method="POST">
+                        <button class="btn btn-light border fw-bold d-flex align-items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                            Verify Request (<%= request.verifiedCount %>)
+                        </button>
+                    </form>
+                    <% if(request.status !== 'resolved') { %>
+                    <form action="/requests/<%=request.id%>/resolve?_method=PUT" method="POST">
+                        <button class="btn btn-success fw-bold d-flex align-items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            Mark as Resolved
+                        </button>
+                    </form>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 bg-dark text-white p-4 shadow-lg sticky-top" style="top: 100px;">
+            <div class="card-body">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-danger"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+                    <h4 class="fw-bold mb-0">Matching Support</h4>
+                </div>
+                <p class="text-white-50 small mb-4">
+                    We found these resources matching the category and location of this request.
+                </p>
+
+                <div class="space-y-3">
+                    <% if(matchingOffers.length > 0) { %>
+                        <% for(let offer of matchingOffers) { %>
+                            <div class="p-3 rounded-4 bg-white bg-opacity-10 border border-white border-opacity-10 mb-3">
+                                <h6 class="fw-bold mb-2"><%= offer.title %></h6>
+                                <div class="d-flex align-items-center text-white-50 small mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    <%= offer.location %>
+                                </div>
+                                <div class="d-flex align-items-center text-success fw-bold small">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="me-1"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                    <%= offer.contact %>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <div class="py-4 text-center text-white-50 small italic">
+                            No direct matches found yet.
+                        </div>
+                    <% } %>
+                </div>
+
+                <a href="/offers/new" class="btn btn-light w-100 fw-bold mt-4">Offer Help Instead</a>
+            </div>
+        </div>
+    </div>
+</div>

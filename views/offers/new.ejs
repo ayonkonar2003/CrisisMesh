@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+    <h1 class="text-center">Offer Help / Resource</h1>
+    <div class="col-md-6 offset-md-3">
+        <form action="/offers" method="POST" enctype="multipart/form-data" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="title">Resource Title</label>
+                <input class="form-control" type="text" id="title" name="title" required placeholder="e.g., 50 food packets available">
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="category">Category</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="Food">Food</option>
+                        <option value="Water">Water</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Shelter">Shelter</option>
+                        <option value="Blood">Blood</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="quantity">Quantity / Details</label>
+                    <input class="form-control" type="text" id="quantity" name="quantity" required placeholder="e.g., 50 packets">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <select class="form-select" id="location" name="location" required>
+                    <option value="" disabled selected>Select a city...</option>
+                    <%- include('../partials/city-datalist') %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="contact">Contact Info</label>
+                <input class="form-control" type="text" id="contact" name="contact" required placeholder="Phone number or email">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Upload Image</label>
+                <input class="form-control" type="file" id="image" name="image">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="description" required rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-success w-100">Submit Offer</button>
+            </div>
+        </form>
+    </div>
+</div>

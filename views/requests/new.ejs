@@ -1,0 +1,53 @@
+<% layout('layouts/boilerplate') %>
+<div class="row">
+    <h1 class="text-center">Report Emergency Need</h1>
+    <div class="col-md-6 offset-md-3">
+        <form action="/requests" method="POST" enctype="multipart/form-data" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label class="form-label" for="title">Title</label>
+                <input class="form-control" type="text" id="title" name="title" required placeholder="e.g., Need blood urgently in Salt Lake">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="location">Location</label>
+                <select class="form-select" id="location" name="location" required>
+                    <option value="" disabled selected>Select a city...</option>
+                    <%- include('../partials/city-datalist') %>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="category">Category</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="Food">Food</option>
+                        <option value="Water">Water</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Shelter">Shelter</option>
+                        <option value="Blood">Blood</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label" for="urgency">Urgency</label>
+                    <select class="form-select" id="urgency" name="urgency" required>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="image">Upload Image</label>
+                <input class="form-control" type="file" id="image" name="image">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" type="text" id="description" name="description" required rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-danger w-100">Submit Request</button>
+            </div>
+        </form>
+    </div>
+</div>
